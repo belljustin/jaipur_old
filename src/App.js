@@ -61,8 +61,17 @@ const Jaipur = Game({
       return G;
     },
     pickUpSingle(G, ctx) {
-      return G;
+      let newG = {...G};
+      // We assume there is only a single market card selected.
+      let card = newG.market[newG.selectedMarket[0]];
+      // Assume if the market goes below 5 cards, the check is left to the victory checker.
+      if (newG.deck.length > 0) {
+        newG.market[newG.selectedMarket[0]] = newG.deck.pop();
+      }
+      G.players[ctx.currentPlayer].hand.push(card);
+      return newG;
     },
+
     pickUpMultiple(G, ctx) {
       return G;
     },
