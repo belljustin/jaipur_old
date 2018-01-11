@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Client } from 'boardgame.io/client';
+import { Game } from 'boardgame.io/core';
 import logo from './logo.svg';
 import './App.css';
 
@@ -17,5 +19,30 @@ class App extends Component {
     );
   }
 }
+
+class Card {
+  constructor(type) {
+    this.type = type;
+  }
+}
+
+class Token {
+  constructor(type, value) {
+    this.type = type;
+    this.value = value;
+  }
+}
+
+class Player {
+  constructor(hand, camels, tokens) {
+    this.hand = hand;
+    this.camels = camels;
+    this.tokens = tokens;
+  }
+}
+
+const Jaipur = Game({
+  setup: () => ({  })
+})
 
 export default App;
