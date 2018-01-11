@@ -125,6 +125,48 @@ const Jaipur = Game({
     }
     return G;
   }
+
+  moves: {
+    pickUpSpecial(G, ctx) {
+      return G;
+    },
+    pickUpSingle(G, ctx) {
+      return G;
+    },
+    pickUpMultiple(G, ctx) {
+      return G;
+    },
+    buyTokens(G, ctx, cardsToTrade){
+      return G;
+    },
+    toggleHandCard(G, ctx, id){
+      let newG = {...G};
+      if (!newG.selectedHand){
+        newG.selectedHand = [];
+      }
+      if (newG.selectedHand.includes(id)) {
+        let removeId = newG.selectedHand.indexOf(id);
+        newG.selectedHand.splice(removeId, 1);
+      } else {
+        newG.selectedHand.push(id);
+      }
+      return newG;
+    },
+    toggleMarketCard(G, ctx, id){
+      let newG = {...G};
+      if (!newG.selectedMarket){
+        newG.selectedMarket = [];
+      }
+      if (newG.selectedMarket.includes(id)){
+        let removeId = newG.selectedMarket.indexOf(id);
+        newG.selectedMarket.splice(removeId, 1);
+      } else {
+        newG.selectedMarket.push(id);
+      }      
+      return newG;
+    }
+  }  
 })
 
-export default App;
+const Application = Client({game:Jaipur})
+export default Application;
