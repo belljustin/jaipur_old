@@ -21,18 +21,54 @@ class App extends Component {
   }
 }
 
-const deckComposition = [8, 6, 6, 6, 8, 8, 10];
-export function buildDeck(composition) {
-  let deck = [];
-  for (let type = 0; type < composition.length; type++) {
-    let c = new Card(type);
-    let cards = Array(composition[type]).fill(c);
-    deck = deck.concat(cards);
-  }
-  return deck;
+const deckComposition = {
+  'red': 6,
+  'gold': 6,
+  'silver': 6,
+  'pink': 8,
+  'green': 8,
+  'brown': 10,
+  'special': 8
 }
 
-class Card {
+const resourceTokenComposition = {
+  'red': [5, 5, 5, 7, 7],
+  'gold': [5, 5, 5, 6, 6],
+  'silver': [5, 5, 5, 5, 5],
+  'pink': [1, 1, 2, 2, 3, 3, 5],
+  'green': [1, 1, 2, 2, 3, 3, 5],
+  'brown': [1, 1, 1, 1, 1, 2, 3, 4],
+}
+const bonusTokenComposition = {
+  'threes': [1, 1, 1, 2, 2, 2, 3, 3, 3],
+  'fours': [4, 4, 5, 5, 6, 6],
+  'fives': [8, 8, 9, 10, 10]
+}
+
+export function buildDeck(composition) {
+  let deck = [];
+  for (let [type, n] of composition) {
+    let c = new Card(type);
+    let cards = Array(n).fill(c);
+    deck = deck.concat(cards);
+  }
+  return shuffle(deck);
+}
+
+export function buildTokens(composition) {
+  let tokens = [];
+  for (let [type, values] of composition) {
+    let ts = [];
+    for (let value of values) {
+      let t = new Token(type, value);
+      ts.push(t);
+    }
+    tokens.push(shuffle(ts));
+  }
+  return tokens;
+}
+
+export class Card {
   constructor(type) {
     this.type = type;
   }
@@ -46,15 +82,49 @@ class Token {
 }
 
 class Player {
-  constructor(hand, camels, tokens) {
+  constructor(hand, tokens) {
     this.hand = hand;
-    this.camels = camels;
     this.tokens = tokens;
   }
 }
 
+// Deal n cards from deck
+function deal(deck, n) {
+  let hand = [];
+  for (let i = 0; i < n; i++) {
+    hand.append(deck.pop);
+    // TODO: check if deck is empty
+  }
+  return hand;
+}
+
 const Jaipur = Game({
-  setup: () => ({  })
+  setup: () => {
+    let deck = buildDeck(deckComposition);
+
+    // Deal market with 3 special cards and 2 other cards
+    let specialCards = new Card('special');
+    let market = Array(3).fill(specialCards);
+    market.append(deck.pop());
+    market.append(deck.pop());
+
+    // Deal both players their hands
+    let players = [
+      Player(deal(deck, 5), []),
+      Player(deal(deck, 5), [])
+    ];
+
+    const G = {
+      resourceTokens: buildTokens(resourceTokenComposition),
+      bonusTokens: buildTokens(bonusTokenComposition),
+      players: [p1, p2],
+      selectedHand: [],
+      selectedMarket: [],
+      deck,
+      market
+    }
+    return G;
+  }
 })
 
 export default App;
