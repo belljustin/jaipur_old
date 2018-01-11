@@ -3,6 +3,7 @@ import { Client } from 'boardgame.io/client';
 import { Game } from 'boardgame.io/core';
 import logo from './logo.svg';
 import './App.css';
+import { shuffle } from './utils.js';
 
 class App extends Component {
   render() {
@@ -21,9 +22,9 @@ class App extends Component {
 }
 
 const deckComposition = [8, 6, 6, 6, 8, 8, 10];
-function buildDeck(composition) {
+export function buildDeck(composition) {
   let deck = [];
-  for (type = 0; type < composition.length; type++) {
+  for (let type = 0; type < composition.length; type++) {
     let c = new Card(type);
     let cards = Array(composition[type]).fill(c);
     deck = deck.concat(cards);

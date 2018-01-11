@@ -1,12 +1,10 @@
-module.exports = {
-    shuffle: function (cards) {
-        rawCards = cards.slice(0);
-        var shuffledCards = [];
-        for (i=0; i<cards.length; i++) {
-            var ix = Math.floor(Math.random()*rawCards.length);
-            var card = rawCards.splice(ix, 1)[0];
-            shuffledCards.push(card);
-        }
-        return shuffledCards;
+export function shuffle(cards) {
+    let rawCards = cards.slice(0);
+    let shuffledCards = [];
+    for (let i=0; i<cards.length; i++) {
+        let ix = Math.floor(Math.random()*rawCards.length);
+        let card = rawCards.splice(ix, 1)[0];
+        shuffledCards.push(card);
     }
+    return shuffledCards;
 }
