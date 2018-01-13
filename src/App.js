@@ -86,20 +86,37 @@ export const pickUpSpecial = (G, ctx) => {
 export const pickUpSingle = (G, ctx) => {
   let newG = copyGame(G);
   // We assume there is only a single market card selected.
-  let card = newG.market[newG.selectedMarket[0]];
+  let card = null;
+  for (let i = 0; i < newG.market.length; i++) {
+    if (newG.market[i].selected) {
+      card = newG.market[i];
+      newG.market[i] = deal(newG.deck, 1)[0];
+      newG.players[ctx.currentPlayer].hand.push(card);
+      break;
+    }
+  }
   // Assume if the market goes below 5 cards, the check is left to the victory checker.
-  newG.market[newG.selectedMarket[0]] = deal(newG.deck, 1)[0];
-  newG.players[ctx.currentPlayer].hand.push(card);
   return newG;
 }
 
 export const pickUpMultiple = (G, ctx) => {
   let newG = copyGame(G);
-  // TODO: Exchange cards in hand with cards in market.
-  for (let i = 0; i < newG.selectedMarket.length; i++) {
-    let tmp = newG.players[ctx.currentPlayer].hand[newG.selectedHand[i]];
-    newG.players[ctx.currentPlayer].hand[G.selectedHand[i]] = newG.market[newG.selectedMarket[i]];
-    newG.market[newG.selectedMarket[i]] = tmp;
+  let hand = newG.players[ctx.currentPlayer].hand;
+  let market = newG.market;
+  // Exchange cards in hand with cards in market.
+  let marketIndices = [];
+  let handIndices = [];
+  for (let i = 0; i < hand.length; i++) {
+    if (hand[i].selected) handIndices.push(i);
+  }
+  for (let i = 0; i < market.length; i++) {
+    if (market[i].selected) marketIndices.push(i);
+  }
+  
+  for (let i = 0; i < marketIndices.length; i++) {
+    let tmp = hand[handIndices[i]];
+    hand[handIndices[i]] = market[marketIndices[i]];
+    market[marketIndices[i]] = tmp;
   } 
   return newG;
 }
