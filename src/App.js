@@ -5,6 +5,7 @@ import logo from './logo.svg';
 import './App.css';
 import { shuffle, copyGame } from './utils.js';
 import { Card, Player } from './Models';
+import { CardDisplay } from './components/CardDisplay';
 
 class JaipurBoard extends Component {
   render() {
@@ -18,7 +19,11 @@ class JaipurBoard extends Component {
 
     let cells = [];
     for (let i = 0; i < market.length; i++) {
-      cells.push(<td>{market[i].type}</td>)
+      cells.push(
+        <CardDisplay
+          card={market[i]}
+          onClick={() => this.props.moves.toggleMarketCard(i)}
+        />);
     }
     tbody.push(<tr>{cells}</tr>);
 
