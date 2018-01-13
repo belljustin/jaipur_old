@@ -14,12 +14,8 @@ export function countResourceCards(cards) {
   return cards.reduce(counter, 0);
 }
 
-export function selectedCards(cards, indices) {
-  const selected = [];
-  for (let i of indices) {
-    selected.push(cards[i]);
-  }
-  return selected;
+export function selectedCards(cards) {
+  return cards.filter(c => c.selected);
 }
 
 export function copyGame(G) {
