@@ -8,3 +8,16 @@ export function shuffle(list) {
     }
     return shuffledList;
 }
+
+export function countResourceCards(cards) {
+  const counter = (num, c) => c.type !== "special" ? num + 1 : num;
+  return cards.reduce(counter, 0);
+}
+
+export function selectedCards(cards, indices) {
+  const selected = [];
+  for (let i of indices) {
+    selected.push(cards[i]);
+  }
+  return selected;
+}
