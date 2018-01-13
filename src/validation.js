@@ -5,8 +5,8 @@ const MARKET_SIZE = 5;
 
 export class Validation {
   // TODO: let consumer know WHY invalid
-  static isValidSingle(hand, selectedMarket) {
-    return (selectedMarket.length === 1  && countResourceCards(hand) < MAX_HAND);
+  static isValidSingle(hand) {
+    return (selectedCards(hand).length === 1  && countResourceCards(hand) < MAX_HAND);
   }
 
   static isValidSpecial(market) {
@@ -17,9 +17,9 @@ export class Validation {
     return card.type !== 'special';
   }
 
-  static isValidMultiple(hand, market, selectedHandIndices, selectedMarketIndices) {
-    let sHand = selectedCards(hand, selectedHandIndices);
-    let sMarket = selectedCards(market, selectedMarketIndices);
+  static isValidMultiple(hand, market) {
+    let sHand = selectedCards(hand);
+    let sMarket = selectedCards(market);
 
     // Verify there's an even trade and we're trading at least two cards
     if (sHand.length !== sMarket.length || sHand.length < 2) {
@@ -46,8 +46,8 @@ export class Validation {
     return true;
   }
 
-  static isValidPurchase(hand, selectedHandIndices) {
-    let sHand = selectedCards(hand, selectedHandIndices);
+  static isValidPurchase(hand) {
+    let sHand = selectedCards(hand);
 
     // Check that we're tying to sell SOMETHING
     if (sHand < 1) {
@@ -64,7 +64,8 @@ export class Validation {
 
     // Luxury cards require at least two cards be sold
     let luxuryTypes = "^(red|gold|silver)$";
-    if (type.match(luxuryTypes)) {
+    console.log(type);
+    if (type.match(luxuryTypes) && sHand.length < 2) {
       return false;
     }
 
