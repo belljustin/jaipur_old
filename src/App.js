@@ -32,19 +32,20 @@ const deckComposition = new Map([
   ['special', 8]
 ]);
 
-const resourceTokenComposition = new Map([
-  ['red', [5, 5, 5, 7, 7]],
-  ['gold', [5, 5, 5, 6, 6]],
-  ['silver', [5, 5, 5, 5, 5]],
-  ['pink', [1, 1, 2, 2, 3, 3, 5]],
-  ['green', [1, 1, 2, 2, 3, 3, 5]],
-  ['brown', [1, 1, 1, 1, 1, 2, 3, 4]]
-]);
-const bonusTokenComposition = new Map([
-  ['threes', [1, 1, 1, 2, 2, 2, 3, 3, 3]],
-  ['fours', [4, 4, 5, 5, 6, 6]],
-  ['fives', [8, 8, 9, 10, 10]]
-]);
+const resourceTokens = {
+  'red': [5, 5, 5, 7, 7],
+  'gold': [5, 5, 5, 6, 6],
+  'silver': [5, 5, 5, 5, 5],
+  'pink': [1, 1, 2, 2, 3, 3, 5],
+  'green': [1, 1, 2, 2, 3, 3, 5],
+  'brown': [1, 1, 1, 1, 1, 2, 3, 4]
+};
+
+const bonusTokens = {
+  'threes': [1, 1, 1, 2, 2, 2, 3, 3, 3],
+  'fours': [4, 4, 5, 5, 6, 6],
+  'fives': [8, 8, 9, 10, 10]
+};
 
 export function buildDeck(composition) {
   let deck = [];
@@ -54,19 +55,6 @@ export function buildDeck(composition) {
     deck = deck.concat(cards);
   }
   return shuffle(deck);
-}
-
-export function buildTokens(composition) {
-  let tokens = [];
-  for (let [type, values] of composition) {
-    let ts = [];
-    for (let value of values) {
-      let t = new Token(type, value);
-      ts.push(t);
-    }
-    tokens.push(ts);
-  }
-  return tokens;
 }
 
 function buildBonusTokens(composition) {
@@ -102,7 +90,7 @@ export const pickUpSpecial = (G, ctx) => {
 }
 
 export const pickUpSingle = (G, ctx) => {
-  let newG = {...G};
+  let newG = copyGame(G);
   // We assume there is only a single market card selected.
   let card = newG.market[newG.selectedMarket[0]];
   // Assume if the market goes below 5 cards, the check is left to the victory checker.
@@ -114,11 +102,21 @@ export const pickUpSingle = (G, ctx) => {
 }
 
 export const pickUpMultiple = (G, ctx) => {
-
+  let newG = copyGame(G);
+  // TODO: Exchange cards in hand with cards in market.
+  for (let i = 0; i < newG.selectedMarket.length; i++) {
+    let tmp = newG.players[ctx.currentPlayer].hand[newG.selectedHand[i]];
+    newG.players[ctx.currentPlayer].hand[G.selectedHand[i]] = newG.market[newG.selectedMarket[i]];
+    newG.market[newG.selectedMarket[i]] = tmp;
+  } 
+  return newG;
 }
 
 export const buyTokens = (G, ctx) => {
-
+  let newG = copyGame(G);
+  for (let i=0; i < newG.selectedHand.length; i++) {
+    
+  }
 }
 
 export const toggleHandCard = (G, ctx, id) => {
@@ -166,8 +164,8 @@ export const Jaipur = Game({
     ];
 
     const G = {
-      resourceTokens: buildTokens(resourceTokenComposition),
-      bonusTokens: buildBonusTokens(bonusTokenComposition),
+      resourceTokens: resourceTokens,
+      bonusTokens: bonusTokens,
       selectedHand: [],
       selectedMarket: [],
       players,

@@ -16,5 +16,6 @@ export function copyGame(G) {
     newG.players[i] = {...G.players[i]};
     newG.players[i].hand = G.players[i].hand.slice();
   }
+  newG.market = G.market.slice();
   return newG;
 }
