@@ -115,7 +115,7 @@ export const buyTokens = (G, ctx) => {
       newHand.push(newG.players[ctx.currentPlayer].hand[i]);
     }
   }
-
+  newG.players[ctx.currentPlayer].hand = newHand;
   let numCards = newG.selectedHand.length;
   let pile = [];
   if (numCards == 3) pile = newG.bonusTokens['threes'];
@@ -189,6 +189,15 @@ export const Jaipur = Game({
     buyTokens,
     toggleHandCard,
     toggleMarketCard
+  },
+
+  flow: {
+    onTurnEnd: (G, ctx) => {
+      let newG = copyGame(G);
+      newG.selectedHand = [];
+      newG.selectedMarket = [];
+      return newG;
+    }
   }  
 });
 
