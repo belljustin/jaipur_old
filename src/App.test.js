@@ -5,11 +5,14 @@ import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpSingle, pickUpMultip
   Jaipur, endGameIf } from './App';
 import { Card } from './Models';
 
-var G;
+var G, ctx;
 
 beforeEach(() => {
   G = Jaipur.setup();
-})
+  ctx = {'currentPlayer':'0'};
+  G.players[0].hand = [ new Card('red'), new Card('green'), new Card('red'), new Card('red'), new Card('red'), new Card('red')];
+  G.market = [ new Card('special'), new Card('special'), new Card('special'), new Card('brown'), new Card('green')];
+});
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -26,65 +29,103 @@ it('builds a starting deck', () => {
 })
 
 it('deal returns none if empty deck', () => {
-  // TODO: Need to write our own deepcopy method.
-  let ctx = {'currentPlayer':"0"}
-  let newG = pickUpSpecial(G, ctx);
-  //console.log(G.players[0].hand);
-  //console.log(newG.players[0].hand);
+  G.deck = [new Card('green'), new Card('brown')];
+  let cards = deal(G.deck, 3);
+  expect(G.deck.length).toBe(0);
+  expect(cards[0].type).toBe('brown');
+  expect(cards[1].type).toBe('green');
+  expect(cards[2]).toBeNull();
 });
 
 it('check the pickUpSingle move', () => {
-  let ctx = {'currentPlayer':"0"};
-  G.players[0].hand = [ new Card('red'), new Card('green'), new Card('yellow') ];
-  G.market = [ new Card('green'), new Card('pink'), new Card('pink'), new Card('brown')];
-  G.selectedMarket = [1];
-  let newG = pickUpSingle(G, ctx);
-  if (false) {
-    console.log(G.players[0].hand);
-    console.log(newG.players[0].hand);
-    console.log(G.market);
-    console.log(newG.market);
+  G.market[3].selected = true;
+  G.deck = [new Card('red'), new Card('silver')];
+  let expectedHand = [];
+  let expectedMarket = [];
+  for (let i = 0; i < G.market.length; i++) {
+    expectedMarket.push(G.market[i].type);
+  }  
+  for (let i = 0; i < G.players[0].hand.length; i++) {
+    expectedHand.push(G.players[0].hand[i].type);
   }
+  expectedHand.push('brown');
+  expectedMarket[3] = 'silver';
+
+  let newG = pickUpSingle(G, ctx);
+  for (let i = 0; i < newG.players[0].hand.length; i++) { 
+    expect(newG.players[0].hand[i].type).toBe(expectedHand[i]);
+  }
+  for (let i = 0; i < newG.market.length; i++) {
+    expect(newG.market[i].type).toBe(expectedMarket[i]);
+  }
+  expect(newG.players[0].hand.length).toBe(G.players[0].hand.length+1);
+  expect(newG.deck.length).toBe(1);
+  expect(newG.deck[0].type).toBe('red');
 });
 
 it('check the pickUpMultiple move', () => {
-  let ctx = {'currentPlayer':"0"};
   G.players[0].hand = [ new Card('red'), new Card('green'), new Card('yellow') ];
   G.market = [ new Card('green'), new Card('pink'), new Card('pink'), new Card('brown')];
   G.players[0].hand[0].selected = true; G.players[0].hand[1].selected = true; 
   G.players[0].hand[2].selected = true;
-  
   G.market[1].selected = true; G.market[2].selected = true; G.market[3].selected = true; 
   
-  let newG = pickUpMultiple(G, ctx);
-  if (false) {
-    console.log(G.market);
-    console.log(newG.market);
-    console.log(G.players[0].hand);
-    console.log(newG.players[0].hand);
-  }
-  expect(newG.market[0].type).toBe('green');
-  expect(newG.market[1].type).toBe('red');
-  expect(newG.market[2].type).toBe('green');
-  expect(newG.market[3].type).toBe('yellow');
+  let expectedHand = ['pink', 'pink', 'brown'];
+  let expectedMarket = ['green', 'red', 'green', 'yellow'];
 
-  expect(newG.players[0].hand[0].type).toBe('pink');
-  expect(newG.players[0].hand[1].type).toBe('pink');
-  expect(newG.players[0].hand[2].type).toBe('brown');
+  let newG = pickUpMultiple(G, ctx);
+  expect(G.players[0].hand.length).toBe(newG.players[0].hand.length);
+  expect(G.market.length).toBe(newG.market.length);
+  for (let i = 0; i < newG.market.length; i++) {
+    expect(newG.market[i].type).toBe(expectedMarket[i]);
+  }
+  for (let i = 0; i < newG.players[0].hand.length; i++) {
+    expect(newG.players[0].hand[i].type).toBe(expectedHand[i]);
+  }
 });
 
 it('check buyTokens move', () => {
-  let ctx = {'currentPlayer':"0"};
-  G.players[0].hand = [ new Card('red'), new Card('green'), new Card('red'), new Card('red')];
-  G.selectedHand = [0, 2, 3];
+  G.players[0].hand = [ new Card('red'), new Card('green'), new Card('red'), new Card('red'), new Card('red')];
+  G.players[0].hand[0].selected = true; G.players[0].hand[2].selected = true;
+  G.players[0].hand[3].selected = true; G.players[0].hand[4].selected = true;
+  G.bonusTokens['fours'] = [10, 9, 8];
   let newG = buyTokens(G, ctx);
-  if (false) {
-    console.log(G.resourceTokens);
-    console.log(newG.resourceTokens);
-    console.log(G.players[0].tokens);
-    console.log(newG.players[0].tokens);
-    console.log(G.bonusTokens);
-    console.log(newG.bonusTokens);
+  
+  let expectedPlayerTokens = [7, 7, 5, 5, 8];
+  let expectedPileTokens = [5, 5];
+  let expectedBonusTokens = [10, 9];
+  // Check hand has traded in cards removed.
+  expect(newG.players[0].hand.length).toBe(1);
+  expect(newG.players[0].hand[0].type).toBe('green');
+  // Check correct tokens have been assigned to the player.
+  expect(newG.players[0].tokens.length).toBe(5);
+  for (let i = 0; i < newG.players[0].tokens.length; i++) {
+    expect(newG.players[0].tokens[i]).toBe(expectedPlayerTokens[i]);
+  }
+  for (let i = 0; i < newG.resourceTokens['red'].length; i++) {
+    expect(newG.resourceTokens['red'][i]).toBe(expectedPileTokens[i]);
+  }
+  for (let i = 0; i < newG.bonusTokens['fours'].length; i++) {
+    expect(newG.bonusTokens['fours'][i]).toBe(expectedBonusTokens[i]);
+  }
+
+});
+
+it('check pickUpSpecial move', () => {
+  G.deck = [new Card('silver'), new Card('gold'), new Card('red')];
+  let newG = pickUpSpecial(G, ctx);
+  let expectedMarket = ['red', 'gold', 'silver', 'brown', 'green'];
+  let expectedHand = ['red', 'green', 'red', 'red', 'red', 'red', 'special', 'special', 'special'];
+
+  // Check lengths.
+  expect(newG.market.length).toBe(5);
+  expect(newG.players[0].hand.length).toBe(9);
+  // Check contents.
+  for (let i = 0; i < newG.market.length; i++) {
+    expect(newG.market[i].type).toBe(expectedMarket[i]);
+  }
+  for (let i = 0; i < newG.players[0].hand.length; i++) {
+    expect(newG.players[0].hand[i].type).toBe(expectedHand[i]);
   }
 });
 
