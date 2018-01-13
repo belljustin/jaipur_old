@@ -78,16 +78,32 @@ function buildBonusTokens(composition) {
 }
 
 // Deal n cards from deck
-function deal(deck, n) {
+export function deal(deck, n) {
   let hand = [];
   for (let i = 0; i < n; i++) {
-    hand.push(deck.pop());
-    // TODO: check if deck is empty
+    if (deck.length > 0) {
+      hand.push(deck.pop());
+    } else {
+      hand.push(null);
+    }
   }
   return hand;
 }
 
-const Jaipur = Game({
+export const pickUpSpecial = (G, ctx) => {
+  let newG = {...G};
+
+  for (let i=0; i<newG.market.length; i++) {
+    if (newG.market[i].type == "special") {
+      newG.players[ctx.currentPlayer].hand.push(newG.market[i]);
+      newG.market[i] = deal(newG.deck, 1)[0];    
+    }
+  }
+
+  return newG;
+}
+
+export const Jaipur = Game({
   setup: () => {
     let deck = buildDeck(deckComposition);
 
@@ -116,9 +132,7 @@ const Jaipur = Game({
   },
 
   moves: {
-    pickUpSpecial(G, ctx) {
-      return G;
-    },
+    pickUpSpecial,
     pickUpSingle(G, ctx) {
       let newG = {...G};
       // We assume there is only a single market card selected.
@@ -134,9 +148,11 @@ const Jaipur = Game({
     pickUpMultiple(G, ctx) {
       return G;
     },
+
     buyTokens(G, ctx, cardsToTrade){
       return G;
     },
+
     toggleHandCard(G, ctx, id){
       let newG = {...G};
       if (!newG.selectedHand){
@@ -164,7 +180,7 @@ const Jaipur = Game({
       return newG;
     }
   }  
-})
+});
 
 const Application = Client({game:Jaipur})
 export default Application;
