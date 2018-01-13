@@ -50,8 +50,10 @@ const bonusTokens = {
 export function buildDeck(composition) {
   let deck = [];
   for (let [type, n] of composition) {
-    let c = new Card(type);
-    let cards = Array(n).fill(c);
+    let cards = Array(n);
+    for (let i=0; i<n; i++) {
+      cards[i] = new Card(type);
+    }
     deck = deck.concat(cards);
   }
   return shuffle(deck);
@@ -127,30 +129,25 @@ export const buyTokens = (G, ctx) => {
 }
 
 export const toggleHandCard = (G, ctx, id) => {
-  let newG = {...G};
-  if (!newG.selectedHand){
-    newG.selectedHand = [];
-  }
-  if (newG.selectedHand.includes(id)) {
-    let removeId = newG.selectedHand.indexOf(id);
-    newG.selectedHand.splice(removeId, 1);
+  let newG = copyGame(G);
+  let card = newG.players[ctx.currentPlayer].hand[id];
+  if (card.selected) {
+    card.selected = false;
   } else {
-    newG.selectedHand.push(id);
+    card.selected = true;
   }
   return newG;
 }
   
 export const toggleMarketCard = (G, ctx, id) => {
-  let newG = {...G};
-  if (!newG.selectedMarket){
-    newG.selectedMarket = [];
-  }
-  if (newG.selectedMarket.includes(id)){
-    let removeId = newG.selectedMarket.indexOf(id);
-    newG.selectedMarket.splice(removeId, 1);
+  let newG = copyGame(G);
+
+  let card = newG.market[id];
+  if (card.selected) {
+    card.selected = false;
   } else {
-    newG.selectedMarket.push(id);
-  }      
+    card.selected = true;
+  }  
   return newG;
 }
 
@@ -159,8 +156,10 @@ export const Jaipur = Game({
     let deck = buildDeck(deckComposition);
 
     // Deal market with 3 special cards and 2 other cards
-    let specialCards = new Card('special');
-    let market = Array(3).fill(specialCards);
+    let market = Array(3);
+    for (let i=0; i<3; i++) {
+      market[i] = new Card("special");
+    }
     market.push(deck.pop());
     market.push(deck.pop());
 
