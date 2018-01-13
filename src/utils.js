@@ -8,3 +8,13 @@ export function shuffle(list) {
     }
     return shuffledList;
 }
+
+export function copyGame(G) {
+  let newG = {...G};
+  newG.players = G.players.slice();
+  for (let i = 0; i < 2; i++) {
+    newG.players[i] = {...G.players[i]};
+    newG.players[i].hand = G.players[i].hand.slice();
+  }
+  return newG;
+}

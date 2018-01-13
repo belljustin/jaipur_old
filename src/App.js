@@ -3,7 +3,7 @@ import { Client } from 'boardgame.io/client';
 import { Game } from 'boardgame.io/core';
 import logo from './logo.svg';
 import './App.css';
-import { shuffle } from './utils.js';
+import { shuffle, copyGame } from './utils.js';
 
 class App extends Component {
   render() {
@@ -110,15 +110,13 @@ export function deal(deck, n) {
 }
 
 export const pickUpSpecial = (G, ctx) => {
-  let newG = {...G};
-
+  let newG = copyGame(G);
   for (let i=0; i<newG.market.length; i++) {
     if (newG.market[i].type == "special") {
       newG.players[ctx.currentPlayer].hand.push(newG.market[i]);
       newG.market[i] = deal(newG.deck, 1)[0];    
     }
   }
-
   return newG;
 }
 
