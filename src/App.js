@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Client } from 'boardgame.io/client';
 import { Game } from 'boardgame.io/core';
-import logo from './logo.svg';
 import './App.css';
 import { shuffle, copyGame } from './utils.js';
 import { Card, Player } from './Models';
 import { CardDisplay } from './components/CardDisplay';
+import { TokenDisplay } from './components/token.js';
 
 class JaipurBoard extends Component {
   render() {
@@ -26,12 +26,18 @@ class JaipurBoard extends Component {
         />);
     }
     tbody.push(<tr>{cells}</tr>);
-
+  
+    let tokenCells = [];
+    for (let key in this.props.G.resourceTokens) {
+      tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.resourceTokens[key]} />)
+    }
     return (
       <div>
         <table id="board">
           <tbody>{tbody}</tbody>
         </table>
+        
+        {tokenCells}
       </div>
     );
   }
@@ -90,7 +96,7 @@ export function deal(deck, n) {
 export const pickUpSpecial = (G, ctx) => {
   let newG = copyGame(G);
   for (let i=0; i<newG.market.length; i++) {
-    if (newG.market[i].type == "special") {
+    if (newG.market[i].type === "special") {
       newG.players[ctx.currentPlayer].hand.push(newG.market[i]);
       newG.market[i] = deal(newG.deck, 1)[0];    
     }
@@ -156,8 +162,8 @@ export const buyTokens = (G, ctx) => {
   newG.players[ctx.currentPlayer].hand = newHand;
 
   let pile = [];
-  if (numCards == 3) pile = newG.bonusTokens['threes'];
-  else if (numCards == 4) pile = newG.bonusTokens['fours'];
+  if (numCards === 3) pile = newG.bonusTokens['threes'];
+  else if (numCards === 4) pile = newG.bonusTokens['fours'];
   else if (numCards >= 5) pile = newG.bonusTokens['fives'];
   
   if (pile.length > 0) newG.players[ctx.currentPlayer].tokens.push(pile.pop());
@@ -199,7 +205,7 @@ export const endGameIf = (G, ctx) => {
   // Check if three resource tokens are gone
   let cnt = 0;
   for (let t in G.resourceTokens) {
-    if (G.resourceTokens[t].length == 0) {
+    if (G.resourceTokens[t].length === 0) {
       cnt++;
     }
 
