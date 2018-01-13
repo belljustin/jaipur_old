@@ -4,13 +4,6 @@ export class Card {
   }
 }
 
-export class Token {
-  constructor(type, value) {
-    this.type = type;
-    this.value = value;
-  }
-}
-
 export class Player {
   constructor(hand, tokens) {
     this.hand = hand;
