@@ -4,6 +4,7 @@ import { Game } from 'boardgame.io/core';
 import logo from './logo.svg';
 import './App.css';
 import { shuffle } from './utils.js';
+import { Card, Token, Player } from './Models';
 
 class App extends Component {
   render() {
@@ -74,26 +75,6 @@ function buildBonusTokens(composition) {
     tokens[i] = shuffle(tokens[i]);
   }
   return tokens;
-}
-
-export class Card {
-  constructor(type) {
-    this.type = type;
-  }
-}
-
-class Token {
-  constructor(type, value) {
-    this.type = type;
-    this.value = value;
-  }
-}
-
-class Player {
-  constructor(hand, tokens) {
-    this.hand = hand;
-    this.tokens = tokens;
-  }
 }
 
 // Deal n cards from deck
