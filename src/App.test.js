@@ -1,8 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpSingle, pickUpMultiple, buyTokens, Jaipur} from './App';
+import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpSingle, pickUpMultiple, buyTokens,
+  Jaipur, endGameIf } from './App';
 import { Card } from './Models';
+
+var G;
+
+beforeEach(() => {
+  G = Jaipur.setup();
+})
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -20,7 +27,6 @@ it('builds a starting deck', () => {
 
 it('deal returns none if empty deck', () => {
   // TODO: Need to write our own deepcopy method.
-  let G = Jaipur.setup();
   let ctx = {'currentPlayer':"0"}
   let newG = pickUpSpecial(G, ctx);
   //console.log(G.players[0].hand);
@@ -28,13 +34,12 @@ it('deal returns none if empty deck', () => {
 });
 
 it('check the pickUpSingle move', () => {
-  let G = Jaipur.setup();
   let ctx = {'currentPlayer':"0"};
   G.players[0].hand = [ new Card('red'), new Card('green'), new Card('yellow') ];
   G.market = [ new Card('green'), new Card('pink'), new Card('pink'), new Card('brown')];
   G.selectedMarket = [1];
   let newG = pickUpSingle(G, ctx);
-  if (true) {
+  if (false) {
     console.log(G.players[0].hand);
     console.log(newG.players[0].hand);
     console.log(G.market);
@@ -43,7 +48,6 @@ it('check the pickUpSingle move', () => {
 });
 
 it('check the pickUpMultiple move', () => {
-  let G = Jaipur.setup();
   let ctx = {'currentPlayer':"0"};
   G.players[0].hand = [ new Card('red'), new Card('green'), new Card('yellow') ];
   G.market = [ new Card('green'), new Card('pink'), new Card('pink'), new Card('brown')];
@@ -67,7 +71,6 @@ it('check the pickUpMultiple move', () => {
 });
 
 it('check buyTokens move', () => {
-  let G = Jaipur.setup();
   let ctx = {'currentPlayer':"0"};
   G.players[0].hand = [ new Card('red'), new Card('green'), new Card('red'), new Card('red')];
   G.selectedHand = [0, 2, 3];
@@ -81,3 +84,22 @@ it('check buyTokens move', () => {
     console.log(newG.bonusTokens);
   }
 });
+
+// Victory conditions
+it('ends game if market is not filled', () => {
+  let c = new Card("special");
+  G.market = [c, c, c, null, null];
+  expect(endGameIf(G, {})).toBeTruthy();
+})
+
+it('ends game if three resource token sets are empty', () => {
+  G.resourceTokens = {
+    'red': [],
+    'gold': [],
+    'silver': [],
+    'pink': [1],
+    'green': [1],
+    'brown': [1]
+  }
+  expect(endGameIf(G, {})).toBeTruthy();
+})
