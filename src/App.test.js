@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpMultiple, Jaipur} from './App';
+import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpMultiple, buyTokens, Jaipur} from './App';
 import { Card } from './Models';
 
 it('renders without crashing', () => {
@@ -47,4 +47,18 @@ it('check the pickUpMultiple move', () => {
   expect(newG.players[0].hand[0].type).toBe('pink');
   expect(newG.players[0].hand[1].type).toBe('pink');
   expect(newG.players[0].hand[2].type).toBe('brown');
+});
+
+it('check buyTokens move', () => {
+  let G = Jaipur.setup();
+  let ctx = {'currentPlayer':"0"};
+  G.players[0].hand = [ new Card('red'), new Card('green'), new Card('red'), new Card('red')];
+  G.selectedHand = [0, 2, 3];
+  let newG = buyTokens(G, ctx);
+  console.log(G.resourceTokens);
+  console.log(newG.resourceTokens);
+  console.log(G.players[0].tokens);
+  console.log(newG.players[0].tokens);
+  console.log(G.bonusTokens);
+  console.log(newG.bonusTokens);
 });

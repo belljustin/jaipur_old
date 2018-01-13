@@ -42,9 +42,9 @@ const resourceTokens = {
 };
 
 const bonusTokens = {
-  'threes': [1, 1, 1, 2, 2, 2, 3, 3, 3],
-  'fours': [4, 4, 5, 5, 6, 6],
-  'fives': [8, 8, 9, 10, 10]
+  'threes': shuffle([1, 1, 1, 2, 2, 2, 3, 3, 3]),
+  'fours': shuffle([4, 4, 5, 5, 6, 6]),
+  'fives': shuffle([8, 8, 9, 10, 10])
 };
 
 export function buildDeck(composition) {
@@ -114,9 +114,26 @@ export const pickUpMultiple = (G, ctx) => {
 
 export const buyTokens = (G, ctx) => {
   let newG = copyGame(G);
-  for (let i=0; i < newG.selectedHand.length; i++) {
-    
+  let newHand = [];
+  for (let i=0; i < newG.players[ctx.currentPlayer].hand.length; i++) {
+    if (newG.selectedHand.includes(i)) {
+      let cardType = newG.players[ctx.currentPlayer].hand[i].type;
+      if (newG.resourceTokens[cardType].length > 0) {
+        newG.players[ctx.currentPlayer].tokens.push(newG.resourceTokens[cardType].pop());
+      }
+    } else {
+      newHand.push(newG.players[ctx.currentPlayer].hand[i]);
+    }
   }
+
+  let numCards = newG.selectedHand.length;
+  let pile = [];
+  if (numCards == 3) pile = newG.bonusTokens['threes'];
+  else if (numCards == 4) pile = newG.bonusTokens['fours'];
+  else if (numCards >= 5) pile = newG.bonusTokens['fives'];
+  
+  if (pile.length > 0) newG.players[ctx.currentPlayer].tokens.push(pile.pop());
+  return newG;
 }
 
 export const toggleHandCard = (G, ctx, id) => {
