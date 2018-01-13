@@ -3,7 +3,7 @@ import { Client } from 'boardgame.io/client';
 import { Game } from 'boardgame.io/core';
 import logo from './logo.svg';
 import './App.css';
-import { shuffle } from './utils.js';
+import { shuffle, copyGame } from './utils.js';
 import { Card, Token, Player } from './Models';
 
 class App extends Component {
@@ -32,19 +32,20 @@ const deckComposition = new Map([
   ['special', 8]
 ]);
 
-const resourceTokenComposition = new Map([
-  ['red', [5, 5, 5, 7, 7]],
-  ['gold', [5, 5, 5, 6, 6]],
-  ['silver', [5, 5, 5, 5, 5]],
-  ['pink', [1, 1, 2, 2, 3, 3, 5]],
-  ['green', [1, 1, 2, 2, 3, 3, 5]],
-  ['brown', [1, 1, 1, 1, 1, 2, 3, 4]]
-]);
-const bonusTokenComposition = new Map([
-  ['threes', [1, 1, 1, 2, 2, 2, 3, 3, 3]],
-  ['fours', [4, 4, 5, 5, 6, 6]],
-  ['fives', [8, 8, 9, 10, 10]]
-]);
+const resourceTokens = {
+  'red': [5, 5, 5, 7, 7],
+  'gold': [5, 5, 5, 6, 6],
+  'silver': [5, 5, 5, 5, 5],
+  'pink': [1, 1, 2, 2, 3, 3, 5],
+  'green': [1, 1, 2, 2, 3, 3, 5],
+  'brown': [1, 1, 1, 1, 1, 2, 3, 4]
+};
+
+const bonusTokens = {
+  'threes': shuffle([1, 1, 1, 2, 2, 2, 3, 3, 3]),
+  'fours': shuffle([4, 4, 5, 5, 6, 6]),
+  'fives': shuffle([8, 8, 9, 10, 10])
+};
 
 export function buildDeck(composition) {
   let deck = [];
@@ -54,19 +55,6 @@ export function buildDeck(composition) {
     deck = deck.concat(cards);
   }
   return shuffle(deck);
-}
-
-export function buildTokens(composition) {
-  let tokens = [];
-  for (let [type, values] of composition) {
-    let ts = [];
-    for (let value of values) {
-      let t = new Token(type, value);
-      ts.push(t);
-    }
-    tokens.push(ts);
-  }
-  return tokens;
 }
 
 function buildBonusTokens(composition) {
@@ -91,15 +79,88 @@ export function deal(deck, n) {
 }
 
 export const pickUpSpecial = (G, ctx) => {
-  let newG = {...G};
-
+  let newG = copyGame(G);
   for (let i=0; i<newG.market.length; i++) {
     if (newG.market[i].type == "special") {
       newG.players[ctx.currentPlayer].hand.push(newG.market[i]);
       newG.market[i] = deal(newG.deck, 1)[0];    
     }
   }
+  return newG;
+}
 
+export const pickUpSingle = (G, ctx) => {
+  let newG = copyGame(G);
+  // We assume there is only a single market card selected.
+  let card = newG.market[newG.selectedMarket[0]];
+  // Assume if the market goes below 5 cards, the check is left to the victory checker.
+  if (newG.deck.length > 0) {
+    newG.market[newG.selectedMarket[0]] = newG.deck.pop();
+  }
+  G.players[ctx.currentPlayer].hand.push(card);
+  return newG;
+}
+
+export const pickUpMultiple = (G, ctx) => {
+  let newG = copyGame(G);
+  // TODO: Exchange cards in hand with cards in market.
+  for (let i = 0; i < newG.selectedMarket.length; i++) {
+    let tmp = newG.players[ctx.currentPlayer].hand[newG.selectedHand[i]];
+    newG.players[ctx.currentPlayer].hand[G.selectedHand[i]] = newG.market[newG.selectedMarket[i]];
+    newG.market[newG.selectedMarket[i]] = tmp;
+  } 
+  return newG;
+}
+
+export const buyTokens = (G, ctx) => {
+  let newG = copyGame(G);
+  let newHand = [];
+  for (let i=0; i < newG.players[ctx.currentPlayer].hand.length; i++) {
+    if (newG.selectedHand.includes(i)) {
+      let cardType = newG.players[ctx.currentPlayer].hand[i].type;
+      if (newG.resourceTokens[cardType].length > 0) {
+        newG.players[ctx.currentPlayer].tokens.push(newG.resourceTokens[cardType].pop());
+      }
+    } else {
+      newHand.push(newG.players[ctx.currentPlayer].hand[i]);
+    }
+  }
+
+  let numCards = newG.selectedHand.length;
+  let pile = [];
+  if (numCards == 3) pile = newG.bonusTokens['threes'];
+  else if (numCards == 4) pile = newG.bonusTokens['fours'];
+  else if (numCards >= 5) pile = newG.bonusTokens['fives'];
+  
+  if (pile.length > 0) newG.players[ctx.currentPlayer].tokens.push(pile.pop());
+  return newG;
+}
+
+export const toggleHandCard = (G, ctx, id) => {
+  let newG = {...G};
+  if (!newG.selectedHand){
+    newG.selectedHand = [];
+  }
+  if (newG.selectedHand.includes(id)) {
+    let removeId = newG.selectedHand.indexOf(id);
+    newG.selectedHand.splice(removeId, 1);
+  } else {
+    newG.selectedHand.push(id);
+  }
+  return newG;
+}
+  
+export const toggleMarketCard = (G, ctx, id) => {
+  let newG = {...G};
+  if (!newG.selectedMarket){
+    newG.selectedMarket = [];
+  }
+  if (newG.selectedMarket.includes(id)){
+    let removeId = newG.selectedMarket.indexOf(id);
+    newG.selectedMarket.splice(removeId, 1);
+  } else {
+    newG.selectedMarket.push(id);
+  }      
   return newG;
 }
 
@@ -120,8 +181,8 @@ export const Jaipur = Game({
     ];
 
     const G = {
-      resourceTokens: buildTokens(resourceTokenComposition),
-      bonusTokens: buildBonusTokens(bonusTokenComposition),
+      resourceTokens: resourceTokens,
+      bonusTokens: bonusTokens,
       selectedHand: [],
       selectedMarket: [],
       players,
@@ -133,52 +194,11 @@ export const Jaipur = Game({
 
   moves: {
     pickUpSpecial,
-    pickUpSingle(G, ctx) {
-      let newG = {...G};
-      // We assume there is only a single market card selected.
-      let card = newG.market[newG.selectedMarket[0]];
-      // Assume if the market goes below 5 cards, the check is left to the victory checker.
-      if (newG.deck.length > 0) {
-        newG.market[newG.selectedMarket[0]] = newG.deck.pop();
-      }
-      G.players[ctx.currentPlayer].hand.push(card);
-      return newG;
-    },
-
-    pickUpMultiple(G, ctx) {
-      return G;
-    },
-
-    buyTokens(G, ctx, cardsToTrade){
-      return G;
-    },
-
-    toggleHandCard(G, ctx, id){
-      let newG = {...G};
-      if (!newG.selectedHand){
-        newG.selectedHand = [];
-      }
-      if (newG.selectedHand.includes(id)) {
-        let removeId = newG.selectedHand.indexOf(id);
-        newG.selectedHand.splice(removeId, 1);
-      } else {
-        newG.selectedHand.push(id);
-      }
-      return newG;
-    },
-    toggleMarketCard(G, ctx, id){
-      let newG = {...G};
-      if (!newG.selectedMarket){
-        newG.selectedMarket = [];
-      }
-      if (newG.selectedMarket.includes(id)){
-        let removeId = newG.selectedMarket.indexOf(id);
-        newG.selectedMarket.splice(removeId, 1);
-      } else {
-        newG.selectedMarket.push(id);
-      }      
-      return newG;
-    }
+    pickUpSingle,
+    pickUpMultiple,
+    buyTokens,
+    toggleHandCard,
+    toggleMarketCard
   }  
 });
 
