@@ -45,5 +45,30 @@ export class Validation {
 
     return true;
   }
+
+  static isValidPurchase(hand, selectedHandIndices) {
+    let sHand = selectedCards(hand, selectedHandIndices);
+
+    // Check that we're tying to sell SOMETHING
+    if (sHand < 1) {
+      return false;
+    }
+
+    // Check that all the sale cards are of the same type
+    let type = sHand[0].type;
+    for (let c of sHand) {
+      if (c.type !== type) {
+        return false;
+      }
+    }
+
+    // Luxury cards require at least two cards be sold
+    let luxuryTypes = "^(red|gold|silver)$";
+    if (type.match(luxuryTypes)) {
+      return false;
+    }
+
+    return true;
+  }
 }
 
