@@ -57,14 +57,6 @@ export function buildDeck(composition) {
   return shuffle(deck);
 }
 
-function buildBonusTokens(composition) {
-  let tokens = buildTokens(composition);
-  for (let i = 0; i < tokens.length; i++) {
-    tokens[i] = shuffle(tokens[i]);
-  }
-  return tokens;
-}
-
 // Deal n cards from deck
 export function deal(deck, n) {
   let hand = [];
@@ -94,10 +86,8 @@ export const pickUpSingle = (G, ctx) => {
   // We assume there is only a single market card selected.
   let card = newG.market[newG.selectedMarket[0]];
   // Assume if the market goes below 5 cards, the check is left to the victory checker.
-  if (newG.deck.length > 0) {
-    newG.market[newG.selectedMarket[0]] = newG.deck.pop();
-  }
-  G.players[ctx.currentPlayer].hand.push(card);
+  newG.market[newG.selectedMarket[0]] = deal(newG.deck, 1)[0];
+  newG.players[ctx.currentPlayer].hand.push(card);
   return newG;
 }
 
