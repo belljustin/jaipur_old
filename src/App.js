@@ -4,7 +4,7 @@ import { Game } from 'boardgame.io/core';
 import logo from './logo.svg';
 import './App.css';
 import { shuffle, copyGame } from './utils.js';
-import { Card, Token, Player } from './Models';
+import { Card, Player } from './Models';
 
 class App extends Component {
   render() {
@@ -172,6 +172,28 @@ export const toggleMarketCard = (G, ctx, id) => {
   return newG;
 }
 
+export const endGameIf = (G, ctx) => {
+  // TODO: return who won
+  // Check if unable to fill market
+  for (let c of G.market) {
+    if (c === null) {
+      return true;
+    }
+  }
+
+  // Check if three resource tokens are gone
+  let cnt = 0;
+  for (let t in G.resourceTokens) {
+    if (G.resourceTokens[t].length == 0) {
+      cnt++;
+    }
+
+    if (cnt >= 3) {
+      return true;
+    }
+  }
+}
+
 export const Jaipur = Game({
   setup: () => {
     let deck = buildDeck(deckComposition);
@@ -221,8 +243,9 @@ export const Jaipur = Game({
         newG.market[j].selected = false;
       }
       return newG;
-    }
-  }  
+    },
+    endGameIf
+  }
 });
 
 const Application = Client({game:Jaipur})

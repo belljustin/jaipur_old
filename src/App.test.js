@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpSingle, pickUpMultiple, buyTokens, Jaipur} from './App';
+import { buildDeck, buildTokens, deal, pickUpSpecial, pickUpSingle, pickUpMultiple, buyTokens,
+  Jaipur, endGameIf } from './App';
 import { Card } from './Models';
 
 var G, ctx;
@@ -88,7 +89,6 @@ it('check buyTokens move', () => {
   G.players[0].hand[0].selected = true; G.players[0].hand[2].selected = true;
   G.players[0].hand[3].selected = true; G.players[0].hand[4].selected = true;
   G.bonusTokens['fours'] = [10, 9, 8];
-  
   let newG = buyTokens(G, ctx);
   
   let expectedPlayerTokens = [7, 7, 5, 5, 8];
@@ -128,3 +128,22 @@ it('check pickUpSpecial move', () => {
     expect(newG.players[0].hand[i].type).toBe(expectedHand[i]);
   }
 });
+
+// Victory conditions
+it('ends game if market is not filled', () => {
+  let c = new Card("special");
+  G.market = [c, c, c, null, null];
+  expect(endGameIf(G, {})).toBeTruthy();
+})
+
+it('ends game if three resource token sets are empty', () => {
+  G.resourceTokens = {
+    'red': [],
+    'gold': [],
+    'silver': [],
+    'pink': [1],
+    'green': [1],
+    'brown': [1]
+  }
+  expect(endGameIf(G, {})).toBeTruthy();
+})
