@@ -173,8 +173,6 @@ export const Jaipur = Game({
     const G = {
       resourceTokens: resourceTokens,
       bonusTokens: bonusTokens,
-      selectedHand: [],
-      selectedMarket: [],
       players,
       deck,
       market
@@ -194,8 +192,14 @@ export const Jaipur = Game({
   flow: {
     onTurnEnd: (G, ctx) => {
       let newG = copyGame(G);
-      newG.selectedHand = [];
-      newG.selectedMarket = [];
+      for (let i=0; i < 2; i++) {
+        for (let j=0; j<newG.players[i].hand.length; j++) {
+          newG.players[i].hand[j].selected = false;
+        }
+      }
+      for (let j=0; j < newG.market.length; j++) {
+        newG.market[j].selected = false;
+      }
       return newG;
     }
   }  
