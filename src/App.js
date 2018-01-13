@@ -6,17 +6,27 @@ import './App.css';
 import { shuffle, copyGame } from './utils.js';
 import { Card, Player } from './Models';
 
-class App extends Component {
+class JaipurBoard extends Component {
   render() {
+    let tbody = [];
+    let p1Hand = this.props.G.players[0].hand;
+    let p2Hand = this.props.G.players[1].hand;
+    let market = this.props.G.market;
+    let maxSize = p1Hand.length;
+    if (p2Hand.length > maxSize) maxSize = p2Hand.length;
+    else if (market.length > maxSize) maxSize = market.length;
+
+    let cells = [];
+    for (let i = 0; i < market.length; i++) {
+      cells.push(<td>{market[i].type}</td>)
+    }
+    tbody.push(<tr>{cells}</tr>);
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <table id="board">
+          <tbody>{tbody}</tbody>
+        </table>
       </div>
     );
   }
@@ -248,5 +258,5 @@ export const Jaipur = Game({
   }
 });
 
-const Application = Client({game:Jaipur})
+const Application = Client({game:Jaipur, board:JaipurBoard})
 export default Application;
