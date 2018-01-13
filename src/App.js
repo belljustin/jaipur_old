@@ -107,18 +107,22 @@ export const pickUpMultiple = (G, ctx) => {
 export const buyTokens = (G, ctx) => {
   let newG = copyGame(G);
   let newHand = [];
-  for (let i=0; i < newG.players[ctx.currentPlayer].hand.length; i++) {
-    if (newG.selectedHand.includes(i)) {
-      let cardType = newG.players[ctx.currentPlayer].hand[i].type;
+  let hand = newG.players[ctx.currentPlayer].hand;
+  let numCards = 0;
+
+  for (let i=0; i < hand.length; i++) {
+    let cardType = hand[i].type;
+    if (hand[i].selected) {
+      numCards += 1;
       if (newG.resourceTokens[cardType].length > 0) {
         newG.players[ctx.currentPlayer].tokens.push(newG.resourceTokens[cardType].pop());
       }
     } else {
-      newHand.push(newG.players[ctx.currentPlayer].hand[i]);
+      newHand.push(hand[i]);
     }
   }
   newG.players[ctx.currentPlayer].hand = newHand;
-  let numCards = newG.selectedHand.length;
+
   let pile = [];
   if (numCards == 3) pile = newG.bonusTokens['threes'];
   else if (numCards == 4) pile = newG.bonusTokens['fours'];
