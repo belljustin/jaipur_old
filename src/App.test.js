@@ -51,8 +51,11 @@ it('check the pickUpMultiple move', () => {
   let ctx = {'currentPlayer':"0"};
   G.players[0].hand = [ new Card('red'), new Card('green'), new Card('yellow') ];
   G.market = [ new Card('green'), new Card('pink'), new Card('pink'), new Card('brown')];
-  G.selectedHand = [0, 1, 2];
-  G.selectedMarket = [1, 2, 3];
+  G.players[0].hand[0].selected = true; G.players[0].hand[1].selected = true; 
+  G.players[0].hand[2].selected = true;
+  
+  G.market[1].selected = true; G.market[2].selected = true; G.market[3].selected = true; 
+  
   let newG = pickUpMultiple(G, ctx);
   if (false) {
     console.log(G.market);
