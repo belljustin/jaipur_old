@@ -50,6 +50,7 @@ class JaipurBoard extends Component {
     for (let key in this.props.G.bonusTokens) {
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
     }
+    //console.log(this.props);
     return (
       <div>
         <h1>Market</h1>
@@ -66,6 +67,10 @@ class JaipurBoard extends Component {
         {tokenCells}
 
         <MoveButton onClick={this.props.moves.buyTokens} moveName='Buy Tokens' />
+        <MoveButton onClick={this.props.moves.pickUpSingle} moveName='Pick Up Single' />
+        <MoveButton onClick={this.props.moves.pickUpMultiple} moveName='Pick Up Multiple' />
+        <MoveButton onClick={this.props.moves.pickUpSpecial} moveName='Pick Up Special' />
+        <MoveButton onClick={this.props.game.endTurn} moveName='End Turn' />
       </div>
     );
   }
