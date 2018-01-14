@@ -44,13 +44,16 @@ class JaipurBoard extends Component {
     handTable.push(<tr>{handCards}</tr>);
 
     let tokenCells = [];
-    for (let key in this.props.G.resourceTokens) {
+    let resourceNames = ['red', 'gold', 'silver', 'pink', 'green', 'brown'];
+    let bonusNames = ['threes', 'fours', 'fives'];
+    for (let i = 0; i < resourceNames.length; i++) {
+      let key = resourceNames[i];
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.resourceTokens[key]} />)
     }
-    for (let key in this.props.G.bonusTokens) {
+    for (let i = 0; i < bonusNames.length; i++) {
+      let key = bonusNames[i];
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
     }
-    //console.log(this.props);
     return (
       <div>
         <h1>Market</h1>
@@ -249,6 +252,7 @@ export const endGameIf = (G, ctx) => {
 }
 
 export const Jaipur = Game({
+  name: 'jaipur',
   setup: () => {
     let deck = buildDeck(deckComposition);
 
@@ -302,5 +306,6 @@ export const Jaipur = Game({
   }
 });
 
-const Application = Client({game:Jaipur, board:JaipurBoard})
+
+const Application = Client({game:Jaipur, board:JaipurBoard, multiplayer:true})
 export default Application;
