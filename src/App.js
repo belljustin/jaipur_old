@@ -24,7 +24,7 @@ class JaipurBoard extends Component {
       marketCards.push(
         <CardDisplay
           card={market[i]}
-          key={i}
+          key={market[i].id}
           onClick={() => this.props.moves.toggleMarketCard(i)}
         />);
     }
@@ -37,7 +37,7 @@ class JaipurBoard extends Component {
       handCards.push(
         <CardDisplay
           card={hand[i]}
-          key={i}
+          key={hand[i].id}
           onClick={() => this.props.moves.toggleHandCard(i)}
         />);
     }
