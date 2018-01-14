@@ -6,6 +6,7 @@ import { shuffle, copyGame } from './utils.js';
 import { Card, Player } from './Models';
 import { CardDisplay } from './components/CardDisplay';
 import { TokenDisplay } from './components/token.js';
+import { MoveButton } from './components/MoveButton.js';
 
 class JaipurBoard extends Component {
   render() {
@@ -46,6 +47,9 @@ class JaipurBoard extends Component {
     for (let key in this.props.G.resourceTokens) {
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.resourceTokens[key]} />)
     }
+    for (let key in this.props.G.bonusTokens) {
+      tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
+    }
     return (
       <div>
         <h1>Market</h1>
@@ -60,6 +64,8 @@ class JaipurBoard extends Component {
 
         <h1>Tokens</h1>
         {tokenCells}
+
+        <MoveButton onClick={this.props.moves.buyTokens} moveName='Buy Tokens' />
       </div>
     );
   }
