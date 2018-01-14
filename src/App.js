@@ -9,7 +9,8 @@ import { TokenDisplay } from './components/token.js';
 
 class JaipurBoard extends Component {
   render() {
-    let tbody = [];
+    let marketTable = [];
+    let handTable = [];
     let p1Hand = this.props.G.players[0].hand;
     let p2Hand = this.props.G.players[1].hand;
     let market = this.props.G.market;
@@ -17,26 +18,47 @@ class JaipurBoard extends Component {
     if (p2Hand.length > maxSize) maxSize = p2Hand.length;
     else if (market.length > maxSize) maxSize = market.length;
 
-    let cells = [];
+    let marketCards = [];
     for (let i = 0; i < market.length; i++) {
-      cells.push(
+      marketCards.push(
         <CardDisplay
           card={market[i]}
+          key={i}
           onClick={() => this.props.moves.toggleMarketCard(i)}
         />);
     }
-    tbody.push(<tr>{cells}</tr>);
-  
+    marketTable.push(<tr>{marketCards}</tr>);
+
+    let currentPlayer = this.props.ctx.currentPlayer;
+    let hand = this.props.G.players[currentPlayer].hand;
+    let handCards = [];
+    for (let i = 0; i < hand.length; i++) {
+      handCards.push(
+        <CardDisplay
+          card={hand[i]}
+          key={i}
+          onClick={() => this.props.moves.toggleHandCard(i)}
+        />);
+    }
+    handTable.push(<tr>{handCards}</tr>);
+
     let tokenCells = [];
     for (let key in this.props.G.resourceTokens) {
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.resourceTokens[key]} />)
     }
     return (
       <div>
-        <table id="board">
-          <tbody>{tbody}</tbody>
+        <h1>Market</h1>
+        <table id="market">
+          <tbody>{marketTable}</tbody>
         </table>
-        
+
+        <h1>Hand</h1>
+        <table id="hand">
+          <tbody>{handTable}</tbody>
+        </table>
+
+        <h1>Tokens</h1>
         {tokenCells}
       </div>
     );

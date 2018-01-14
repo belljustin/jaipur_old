@@ -18,7 +18,8 @@ export class CardDisplay extends React.Component {
 
   render() {
     let cardStyle = {
-      fontWeight: "normal"
+      fontWeight: "normal",
+      backgroundColor: this.card.type
     }
 
     if (this.card.selected === true) {
@@ -26,11 +27,11 @@ export class CardDisplay extends React.Component {
     }
 
     return (
-      <div className={"bgio-card " + this.card.type + "-card"}
+      <td className={"bgio-card " + this.card.type + "-card"}
            onClick={this.onClick}
            style={cardStyle}>
       { this.card.type }
-      </div>
+      </td>
     );
   }
 }
