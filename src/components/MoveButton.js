@@ -9,7 +9,7 @@ export class MoveButton extends Component {
   
   render() {
     return (
-      <button type="button" onClick={this.onClick}>{this.props.moveName}</button>
+      <button type="button" disabled={this.props.disabled} onClick={this.onClick}>{this.props.moveName}</button>
     )
   }
 }

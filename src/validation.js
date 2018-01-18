@@ -5,8 +5,8 @@ const MARKET_SIZE = 5;
 
 export class Validation {
   // TODO: let consumer know WHY invalid
-  static isValidSingle(hand) {
-    return (selectedCards(hand).length === 1  && countResourceCards(hand) < MAX_HAND);
+  static isValidSingle(hand, market) {
+    return (selectedCards(market).length === 1  && countResourceCards(hand) < MAX_HAND);
   }
 
   static isValidSpecial(market) {

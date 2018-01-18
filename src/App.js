@@ -4,6 +4,7 @@ import { CardDisplay } from './components/CardDisplay';
 import { TokenDisplay } from './components/token.js';
 import { MoveButton } from './components/MoveButton.js';
 import { Jaipur } from './game';
+import { Validation } from './validation';
 
 class JaipurBoard extends Component {
   constructor(props) {
@@ -70,11 +71,11 @@ class JaipurBoard extends Component {
         <h1>Tokens</h1>
         {tokenCells}
 
-        <MoveButton onClick={() => this.props.moves.buyTokens()} moveName='Buy Tokens' />
-        <MoveButton onClick={() => this.props.moves.pickUpSingle()} moveName='Pick Up Single' />
-        <MoveButton onClick={() => this.props.moves.pickUpMultiple()} moveName='Pick Up Multiple' />
-        <MoveButton onClick={() => this.props.moves.pickUpSpecial()} moveName='Pick Up Special' />
-        <MoveButton onClick={() => this.props.moves.endTurn()} moveName='End Turn' />
+        <MoveButton disabled={!Validation.isValidPurchase(hand)} onClick={() => this.props.moves.buyTokens()} moveName='Buy Tokens' />
+        <MoveButton disabled={!Validation.isValidSingle(hand, market)} onClick={() => this.props.moves.pickUpSingle()} moveName='Pick Up Single' />
+        <MoveButton disabled={!Validation.isValidMultiple(hand, market)} onClick={() => this.props.moves.pickUpMultiple()} moveName='Pick Up Multiple' />
+        <MoveButton disabled={!Validation.isValidSpecial(market)} onClick={() => this.props.moves.pickUpSpecial()} moveName='Pick Up Special' />
+        <MoveButton disabled={false} onClick={() => this.props.events.endTurn()} moveName='End Turn' />
       </div>
     );
   }
