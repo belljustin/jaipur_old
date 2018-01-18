@@ -71,6 +71,7 @@ class JaipurBoard extends Component {
         <MoveButton disabled={!Validation.isValidMultiple(hand, market)} onClick={() => this.props.moves.pickUpMultiple()} moveName='Pick Up Multiple' />
         <MoveButton disabled={!Validation.isValidSpecial(market)} onClick={() => this.props.moves.pickUpSpecial()} moveName='Pick Up Special' />
         <MoveButton disabled={false} onClick={() => this.props.events.endTurn()} moveName='End Turn' />
+        <p> Player 0: {this.props.G.players[0].tokens.reduce((a, b) => a+b, 0)} Player 1: {this.props.G.players[1].tokens.reduce((a,b) => a+b, 0)} </p>
       </div>
     );
   }
