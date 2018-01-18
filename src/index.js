@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
-let path = window.location.pathname.split("/");
-let playerID = path[path.length - 1];
+let params = (new URL(document.location)).searchParams;
+let playerID = params.get("player");
 ReactDOM.render(<App gameID="foo" playerID={playerID}/>, document.getElementById('root'));
+

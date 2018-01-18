@@ -7,10 +7,6 @@ import { Jaipur } from './game';
 import { Validation } from './validation';
 
 class JaipurBoard extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let marketTable = [];
     let handTable = [];
