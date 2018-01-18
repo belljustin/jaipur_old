@@ -3,4 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
-ReactDOM.render(<App gameID="foo" playerID="0"/>, document.getElementById('root'));
+let path = window.location.pathname.split("/");
+let playerID = path[path.length - 1];
+ReactDOM.render(<App gameID="foo" playerID={playerID}/>, document.getElementById('root'));
