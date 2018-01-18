@@ -32,8 +32,7 @@ class JaipurBoard extends Component {
     }
     marketTable.push(<tr key="market">{marketCards}</tr>);
 
-    let currentPlayer = this.props.ctx.currentPlayer;
-    let hand = this.props.G.players[currentPlayer].hand;
+    let hand = this.props.G.players[this.props.playerID].hand;
     let handCards = [];
     for (let i = 0; i < hand.length; i++) {
       handCards.push(
