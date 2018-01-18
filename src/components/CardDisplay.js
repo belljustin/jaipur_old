@@ -22,14 +22,14 @@ export class CardDisplay extends React.Component {
       backgroundColor: this.card.type
     }
 
-    if (this.card.selected === true) {
+    if (this.props.card.selected === true) {
       cardStyle.fontWeight = "bold"
     } else {
       cardStyle.fontWeight = "normal";
     }
 
     return (
-      <td className={"bgio-card " + this.card.type + "-card"}
+      <td className={"bgio-card " + this.props.card.type + "-card"}
            onClick={this.onClick}
            style={cardStyle}>
       { this.card.type }
