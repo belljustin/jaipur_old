@@ -24,6 +24,8 @@ export class CardDisplay extends React.Component {
 
     if (this.card.selected === true) {
       cardStyle.fontWeight = "bold"
+    } else {
+      cardStyle.fontWeight = "normal";
     }
 
     return (
