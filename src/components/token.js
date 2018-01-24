@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './styles.css';
 
 export class TokenDisplay extends Component { 
   render() {
@@ -10,11 +11,15 @@ export class TokenDisplay extends Component {
         list.push(this.props.tokenValues[i]);
       }
     }
+    let color = { background: this.props.tokenType };
+    if (this.props.hidden) {
+      color = { background: 'black'}
+    }
     return (
       <div> 
-        <p> {this.props.tokenType}: { list.join(', ') }</p>
+      <p class='tokenTitle'>{this.props.tokenType}</p>{list.map(function(value){ return <div class='circle' style={color}>{value}</div>;})}
       </div>
-    ); 
+    );
   }
 }
 
