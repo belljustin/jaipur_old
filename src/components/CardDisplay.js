@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './styles.css';
 
 export class CardDisplay extends React.Component {
   static propTypes = {
@@ -19,17 +20,21 @@ export class CardDisplay extends React.Component {
   render() {
     let cardStyle = {
       fontWeight: "normal",
-      backgroundColor: this.card.type
+      background: this.card.type
     }
 
     if (this.props.card.selected === true) {
-      cardStyle.fontWeight = "bold"
+      cardStyle.fontWeight = "bold";
+      cardStyle.width = "132px";
+      cardStyle.height = "185px";
     } else {
       cardStyle.fontWeight = "normal";
+      cardStyle.width = "120px";
+      cardStyle.height = "168px";
     }
 
     return (
-      <td className={"bgio-card " + this.props.card.type + "-card"}
+      <td className={"card"}
            onClick={this.onClick}
            style={cardStyle}>
       { this.card.type }
