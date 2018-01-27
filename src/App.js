@@ -16,7 +16,7 @@ class JaipurBoard extends Component {
     let p2Hand = this.props.G.players[1].hand;
     let maxSize = p1Hand.length;
     if (p2Hand.length > maxSize) maxSize = p2Hand.length;
-    else if (this.props.G.market.length > maxSize) maxSize = market.length;
+    else if (this.props.G.market.length > maxSize) maxSize = this.props.G.market.length;
 
     let marketCards = [];
     let market = [];
