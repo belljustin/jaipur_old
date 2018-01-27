@@ -26,3 +26,26 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.tokenDiv {
+    width: 400px;
+    float: left;
+}
+
+.scoreDiv{
+    float: left;
+    margin-left: 20px;
+    display: inline-block;
+    height: 325px;
+    vertical-align: middle;
+    transform: translateY(50%);
+}
+
+.boardDiv {
+    float: left;
+}
+
+.handDiv {
+    float: left;
+}
+

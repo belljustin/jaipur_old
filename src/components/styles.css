@@ -1,3 +1,13 @@
+.moveButton {
+    display: inline-block;
+    padding: 7px 25px;
+    background-color: #bdbdbdb3;
+    border: 1px #0000004d;
+    border-style: solid;
+    margin-top: 15px;
+    margin-left: 1px;
+}
+
 .circle {
     width: 30px;
     height: 30px;
@@ -75,4 +85,20 @@
   text-shadow:2px 2px 0 rgba(0,0,0,.3);
 
   background-color:#c00;
+}
+
+.card {
+    display: inline-block;
+    user-select: none;
+    font-family: monospace;
+    font-size: 18px;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #cdcdcd;
+    width: 120px;
+    height: 168px;
+    transition: all 0.1s;
+    line-height: 140px;
 }

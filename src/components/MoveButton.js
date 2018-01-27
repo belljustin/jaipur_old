@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './styles.css';
 
 export class MoveButton extends Component {
   constructor(props) {
@@ -9,7 +10,7 @@ export class MoveButton extends Component {
   
   render() {
     return (
-      <button type="button" disabled={this.props.disabled} onClick={this.onClick}>{this.props.moveName}</button>
+      <button class="moveButton" type="button" disabled={this.props.disabled} onClick={this.onClick}>{this.props.moveName}</button>
     )
   }
 }

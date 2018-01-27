@@ -3,11 +3,17 @@ import { Client } from 'boardgame.io/client';
 import { CardDisplay } from './components/CardDisplay';
 import { TokenDisplay } from './components/token.js';
 import { MoveButton } from './components/MoveButton.js';
+import { GameOver } from './components/GameOver.js';
 import { Jaipur } from './game';
 import { Validation } from './validation';
+import './App.css';
+import './components/styles.css';
 
 class JaipurBoard extends Component {
   render() {
+    let player = this.props.G.players[this.props.playerID];
+    let opponent = this.props.G.players[1 - this.props.playerID]
+
     let marketTable = [];
     let handTable = [];
     let p1Hand = this.props.G.players[0].hand;
@@ -51,8 +57,15 @@ class JaipurBoard extends Component {
       let key = bonusNames[i];
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
     }
+
     return (
-      <div>
+    <div class="boardDiv">
+      <div class="tokenDiv">
+        <h1>Tokens</h1>
+        {tokenCells}
+
+      </div>
+      <div class="handDiv">
         <h1>Market</h1>
         <table id="market">
           <tbody>{marketTable}</tbody>
@@ -62,16 +75,29 @@ class JaipurBoard extends Component {
         <table id="hand">
           <tbody>{handTable}</tbody>
         </table>
-
-        <h1>Tokens</h1>
-        {tokenCells}
-
+        
         <MoveButton disabled={!Validation.isValidPurchase(hand)} onClick={() => {this.props.moves.buyTokens(); this.props.events.endTurn();}} moveName='Buy Tokens' />
         <MoveButton disabled={!Validation.isValidSingle(hand, market)} onClick={() => {this.props.moves.pickUpSingle(); this.props.events.endTurn();}} moveName='Pick Up Single' />
         <MoveButton disabled={!Validation.isValidMultiple(hand, market)} onClick={() => {this.props.moves.pickUpMultiple(); this.props.events.endTurn();}} moveName='Pick Up Multiple' />
         <MoveButton disabled={!Validation.isValidSpecial(market)} onClick={() => {this.props.moves.pickUpSpecial(); this.props.events.endTurn();}} moveName='Pick Up Special' />
-        <p> Player 0: {this.props.G.players[0].tokens.reduce((a, b) => a+b, 0)} Player 1: {this.props.G.players[1].tokens.reduce((a,b) => a+b, 0)} </p>
       </div>
+
+      <div class="scoreDiv">
+        <p> You: {this.props.G.players[this.props.playerID].tokens.reduce((a, b) => a+b, 0)} </p>
+        <div class="card">
+          {this.props.G.deck.length}
+        </div>
+        <p> Opponent: {this.props.G.players[1-this.props.playerID].tokens.reduce((a,b) => a+b, 0)} </p>
+      </div>
+
+      {this.props.ctx.gameover &&
+        <GameOver
+          onClick={() => this.props.moves.restart()}
+          score={player.score}
+          oppScore={opponent.score}
+        />
+      }
+    </div>
     );
   }
 }
