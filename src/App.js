@@ -14,19 +14,22 @@ class JaipurBoard extends Component {
     let handTable = [];
     let p1Hand = this.props.G.players[0].hand;
     let p2Hand = this.props.G.players[1].hand;
-    let market = this.props.G.market;
     let maxSize = p1Hand.length;
     if (p2Hand.length > maxSize) maxSize = p2Hand.length;
-    else if (market.length > maxSize) maxSize = market.length;
+    else if (this.props.G.market.length > maxSize) maxSize = market.length;
 
     let marketCards = [];
-    for (let i = 0; i < market.length; i++) {
-      marketCards.push(
-        <CardDisplay
-          card={market[i]}
-          key={market[i].id}
-          onClick={() => this.props.moves.toggleMarketCard(i)}
-        />);
+    let market = [];
+    for (let i = 0; i < this.props.G.market.length; i++) {
+      if (this.props.G.market[i]) {
+        marketCards.push(
+          <CardDisplay
+            card={this.props.G.market[i]}
+            key={this.props.G.market[i].id}
+            onClick={() => this.props.moves.toggleMarketCard(i)}
+          />);
+        market.push(this.props.G.market[i]);
+      }
     }
     marketTable.push(<tr key="market">{marketCards}</tr>);
 
@@ -60,8 +63,6 @@ class JaipurBoard extends Component {
       youStyle.fontWeight = 'bold';
       oppStyle.fontWeight = 'normal';
     } else {
-      console.log(this.props.playerID);
-      console.log(this.props.ctx.currentPlayer);
       oppStyle.fontWeight = 'bold';
       youStyle.fontWeight = 'normal';
     }
