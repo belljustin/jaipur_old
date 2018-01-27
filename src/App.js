@@ -18,19 +18,22 @@ class JaipurBoard extends Component {
     let handTable = [];
     let p1Hand = this.props.G.players[0].hand;
     let p2Hand = this.props.G.players[1].hand;
-    let market = this.props.G.market;
     let maxSize = p1Hand.length;
     if (p2Hand.length > maxSize) maxSize = p2Hand.length;
-    else if (market.length > maxSize) maxSize = market.length;
+    else if (this.props.G.market.length > maxSize) maxSize = this.props.G.market.length;
 
     let marketCards = [];
-    for (let i = 0; i < market.length; i++) {
-      marketCards.push(
-        <CardDisplay
-          card={market[i]}
-          key={market[i].id}
-          onClick={() => this.props.moves.toggleMarketCard(i)}
-        />);
+    let market = [];
+    for (let i = 0; i < this.props.G.market.length; i++) {
+      if (this.props.G.market[i]) {
+        marketCards.push(
+          <CardDisplay
+            card={this.props.G.market[i]}
+            key={this.props.G.market[i].id}
+            onClick={() => this.props.moves.toggleMarketCard(i)}
+          />);
+        market.push(this.props.G.market[i]);
+      }
     }
     marketTable.push(<tr key="market">{marketCards}</tr>);
 
@@ -58,6 +61,16 @@ class JaipurBoard extends Component {
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
     }
 
+    let youStyle = {}
+    let oppStyle = {}
+    if (this.props.playerID === this.props.ctx.currentPlayer) {
+      youStyle.fontWeight = 'bold';
+      oppStyle.fontWeight = 'normal';
+    } else {
+      oppStyle.fontWeight = 'bold';
+      youStyle.fontWeight = 'normal';
+    }
+
     return (
     <div class="boardDiv">
       <div class="tokenDiv">
@@ -83,11 +96,11 @@ class JaipurBoard extends Component {
       </div>
 
       <div class="scoreDiv">
-        <p> You: {this.props.G.players[this.props.playerID].tokens.reduce((a, b) => a+b, 0)} </p>
+        <p style={youStyle}> You: {this.props.G.players[this.props.playerID].tokens.reduce((a, b) => a+b, 0)} </p>
         <div class="card">
           {this.props.G.deck.length}
         </div>
-        <p> Opponent: {this.props.G.players[1-this.props.playerID].tokens.reduce((a,b) => a+b, 0)} </p>
+        <p style={oppStyle}> Opponent: {this.props.G.players[1-this.props.playerID].tokens.reduce((a,b) => a+b, 0)} </p>
       </div>
 
       {this.props.ctx.gameover &&

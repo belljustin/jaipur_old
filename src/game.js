@@ -224,7 +224,9 @@ export const Jaipur = Game({
         }
       }
       for (let j=0; j < newG.market.length; j++) {
-        newG.market[j].selected = false;
+        if (newG.market[j]) {
+          newG.market[j].selected = false;
+        }
       }
       return newG;
     },
