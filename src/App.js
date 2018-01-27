@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Client } from 'boardgame.io/client';
+import { getScore } from './utils';
 import { CardDisplay } from './components/CardDisplay';
 import { TokenDisplay } from './components/token.js';
 import { MoveButton } from './components/MoveButton.js';
@@ -106,8 +107,8 @@ class JaipurBoard extends Component {
       {this.props.ctx.gameover &&
         <GameOver
           onClick={() => this.props.moves.restart()}
-          score={player.score}
-          oppScore={opponent.score}
+          score={getScore(player)}
+          oppScore={getScore(opponent)}
         />
       }
     </div>
