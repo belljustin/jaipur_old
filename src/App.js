@@ -66,11 +66,10 @@ class JaipurBoard extends Component {
         <h1>Tokens</h1>
         {tokenCells}
 
-        <MoveButton disabled={!Validation.isValidPurchase(hand)} onClick={() => this.props.moves.buyTokens()} moveName='Buy Tokens' />
-        <MoveButton disabled={!Validation.isValidSingle(hand, market)} onClick={() => this.props.moves.pickUpSingle()} moveName='Pick Up Single' />
-        <MoveButton disabled={!Validation.isValidMultiple(hand, market)} onClick={() => this.props.moves.pickUpMultiple()} moveName='Pick Up Multiple' />
-        <MoveButton disabled={!Validation.isValidSpecial(market)} onClick={() => this.props.moves.pickUpSpecial()} moveName='Pick Up Special' />
-        <MoveButton disabled={false} onClick={() => this.props.events.endTurn()} moveName='End Turn' />
+        <MoveButton disabled={!Validation.isValidPurchase(hand)} onClick={() => {this.props.moves.buyTokens(); this.props.events.endTurn();}} moveName='Buy Tokens' />
+        <MoveButton disabled={!Validation.isValidSingle(hand, market)} onClick={() => {this.props.moves.pickUpSingle(); this.props.events.endTurn();}} moveName='Pick Up Single' />
+        <MoveButton disabled={!Validation.isValidMultiple(hand, market)} onClick={() => {this.props.moves.pickUpMultiple(); this.props.events.endTurn();}} moveName='Pick Up Multiple' />
+        <MoveButton disabled={!Validation.isValidSpecial(market)} onClick={() => {this.props.moves.pickUpSpecial(); this.props.events.endTurn();}} moveName='Pick Up Special' />
         <p> Player 0: {this.props.G.players[0].tokens.reduce((a, b) => a+b, 0)} Player 1: {this.props.G.players[1].tokens.reduce((a,b) => a+b, 0)} </p>
       </div>
     );
