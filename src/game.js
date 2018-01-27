@@ -178,6 +178,7 @@ export const Jaipur = Game({
   name: 'jaipur',
   setup: () => {
     let deck = buildDeck(deckComposition);
+
     // Deal market with 3 special cards and 2 other cards
     let market = Array(3);
     for (let i=0; i<3; i++) {

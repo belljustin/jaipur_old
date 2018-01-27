@@ -42,3 +42,9 @@ export function copyGame(G) {
   }
   return newG;
 }
+
+export function getScore(player) {
+    console.log(player.tokens);
+    return player.tokens.reduce((a, b) => a+b, 0);
+}
+

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Client } from 'boardgame.io/client';
+import { getScore } from './utils';
 import { CardDisplay } from './components/CardDisplay';
 import { TokenDisplay } from './components/token.js';
 import { MoveButton } from './components/MoveButton.js';
+import { GameOver } from './components/GameOver.js';
 import { Jaipur } from './game';
 import { Validation } from './validation';
 import './App.css';
@@ -10,6 +12,9 @@ import './components/styles.css';
 
 class JaipurBoard extends Component {
   render() {
+    let player = this.props.G.players[this.props.playerID];
+    let opponent = this.props.G.players[1 - this.props.playerID]
+
     let marketTable = [];
     let handTable = [];
     let p1Hand = this.props.G.players[0].hand;
@@ -98,6 +103,14 @@ class JaipurBoard extends Component {
         </div>
         <p style={oppStyle}> Opponent: {this.props.G.players[1-this.props.playerID].tokens.reduce((a,b) => a+b, 0)} </p>
       </div>
+
+      {this.props.ctx.gameover &&
+        <GameOver
+          onClick={() => this.props.moves.restart()}
+          score={getScore(player)}
+          oppScore={getScore(opponent)}
+        />
+      }
     </div>
     );
   }

@@ -12,6 +12,10 @@ export class Player {
     this.hand = hand;
     this.tokens = tokens;
   }
+
+  get score() {
+    return this.tokens.reduce((a, b) => a+b, 0)
+  }
 }
 
 function guid() {
