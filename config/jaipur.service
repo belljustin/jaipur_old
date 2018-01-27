@@ -1,0 +1,14 @@
+[Unit]
+Description=Jaipur
+
+[Service]
+EnvironmentFile=-/etc/default/Jaipur
+ExecStart=/home/jaipur/jaipur/start.sh
+WorkingDirectory=/home/jaipur/jaipur
+LimitNOFILE=4096
+IgnoreSIGPIPE=false
+KillMode=process
+User=justin.bell
+
+[Install]
+WantedBy=multi-user.target
