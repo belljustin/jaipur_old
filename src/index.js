@@ -5,5 +5,7 @@ import App from './App';
 
 let params = (new URL(document.location)).searchParams;
 let playerID = params.get("player");
-ReactDOM.render(<App gameID="foo" playerID={playerID}/>, document.getElementById('root'));
+let gameID = params.get("id") || 0;
+console.log(gameID);
+ReactDOM.render(<App gameID={gameID} playerID={playerID}/>, document.getElementById('root'));
 
