@@ -116,5 +116,5 @@ class JaipurBoard extends Component {
   }
 }
 
-const Application = Client({game:Jaipur, board:JaipurBoard, multiplayer:true})
+const Application = Client({debug: false, game:Jaipur, board:JaipurBoard, multiplayer:true})
 export default Application;
