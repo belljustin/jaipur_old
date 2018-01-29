@@ -6,7 +6,7 @@ const MARKET_SIZE = 5;
 export class Validation {
   // TODO: let consumer know WHY invalid
   static isValidSingle(hand, market) {
-    return (selectedCards(market).length === 1  && countResourceCards(hand) < MAX_HAND);
+    return (selectedCards(market).length === 1  && countResourceCards(hand) < MAX_HAND && selectedCards(market)[0].type !== "special");
   }
 
   static isValidSpecial(market) {
@@ -24,6 +24,13 @@ export class Validation {
     // Verify there's an even trade and we're trading at least two cards
     if (sHand.length !== sMarket.length || sHand.length < 2) {
       return false;
+    }
+    
+    // Verify no special cards are selected in the market
+    for (let i = 0; i < sMarket.length; i++) {
+      if (sMarket[i].type === "special") {
+        return false;
+      }
     }
 
     // Verify added cards don't put us over the the max hand limit
