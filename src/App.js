@@ -61,10 +61,10 @@ class JaipurBoard extends Component {
       let key = bonusNames[i];
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
     }
-
+    let yourTurn = this.props.playerID === this.props.ctx.currentPlayer;
     let youStyle = {}
     let oppStyle = {}
-    if (this.props.playerID === this.props.ctx.currentPlayer) {
+    if (yourTurn) {
       youStyle.fontWeight = 'bold';
       oppStyle.fontWeight = 'normal';
     } else {
@@ -90,10 +90,10 @@ class JaipurBoard extends Component {
           <tbody>{handTable}</tbody>
         </table>
         
-        <MoveButton disabled={!Validation.isValidPurchase(hand)} onClick={() => {this.props.moves.buyTokens(); this.props.events.endTurn();}} moveName='Buy Tokens' />
-        <MoveButton disabled={!Validation.isValidSingle(hand, market)} onClick={() => {this.props.moves.pickUpSingle(); this.props.events.endTurn();}} moveName='Pick Up Single' />
-        <MoveButton disabled={!Validation.isValidMultiple(hand, market)} onClick={() => {this.props.moves.pickUpMultiple(); this.props.events.endTurn();}} moveName='Pick Up Multiple' />
-        <MoveButton disabled={!Validation.isValidSpecial(market)} onClick={() => {this.props.moves.pickUpSpecial(); this.props.events.endTurn();}} moveName='Pick Up Special' />
+        <MoveButton disabled={!Validation.isValidPurchase(hand) || !yourTurn} onClick={() => {this.props.moves.buyTokens(); this.props.events.endTurn();}} moveName='Buy Tokens' />
+        <MoveButton disabled={!Validation.isValidSingle(hand, market) || !yourTurn} onClick={() => {this.props.moves.pickUpSingle(); this.props.events.endTurn();}} moveName='Pick Up Single' />
+        <MoveButton disabled={!Validation.isValidMultiple(hand, market) || !yourTurn} onClick={() => {this.props.moves.pickUpMultiple(); this.props.events.endTurn();}} moveName='Pick Up Multiple' />
+        <MoveButton disabled={!Validation.isValidSpecial(market) || !yourTurn} onClick={() => {this.props.moves.pickUpSpecial(); this.props.events.endTurn();}} moveName='Pick Up Special' />
       </div>
 
       <div class="scoreDiv">
