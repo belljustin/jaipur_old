@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Client } from 'boardgame.io/client';
-import { getScore, getFinalScore, getNumSpecial } from './utils';
+import { getScore, getFinalScore, getNumSpecial, countResourceCards } from './utils';
 import { CardDisplay } from './components/CardDisplay';
 import { TokenDisplay } from './components/token.js';
 import { MoveButton } from './components/MoveButton.js';
@@ -62,8 +62,9 @@ class JaipurBoard extends Component {
       tokenCells.push(<TokenDisplay tokenType={key} tokenValues={this.props.G.bonusTokens[key]} hidden={true} />)
     }
     let yourTurn = this.props.playerID === this.props.ctx.currentPlayer;
-    let youStyle = {}
-    let oppStyle = {}
+    let youStyle = {};
+    let oppStyle = {};
+    let cardStyle = {};
     if (yourTurn) {
       youStyle.fontWeight = 'bold';
       oppStyle.fontWeight = 'normal';
@@ -71,6 +72,7 @@ class JaipurBoard extends Component {
       oppStyle.fontWeight = 'bold';
       youStyle.fontWeight = 'normal';
     }
+    cardStyle.fontStyle = 'italic';
 
     return (
     <div class="boardDiv">
@@ -97,11 +99,13 @@ class JaipurBoard extends Component {
       </div>
 
       <div class="scoreDiv">
-        <p style={youStyle}> You: {getScore(this.props.G.players[this.props.playerID])} </p>
+        <p style={cardStyle}> {countResourceCards(opponent.hand)} Cards </p>
+        <p style={oppStyle}> Opponent: {getScore(opponent)} </p>
         <div class="card">
           {this.props.G.deck.length}
         </div>
-        <p style={oppStyle}> Opponent: {getScore(this.props.G.players[1-this.props.playerID])} </p>
+        <p style={youStyle}> You: {getScore(player)} </p>
+        <p style={cardStyle}> {countResourceCards(player.hand)} Cards </p>
       </div>
 
       {this.props.ctx.gameover &&
