@@ -43,6 +43,27 @@ export function copyGame(G) {
   return newG;
 }
 
+export function getNumSpecial(player) {  
+  let numSpecial = player.hand.reduce((n, card) => {
+    if (card.type === 'special') {
+      n += 1;
+    }
+    return n;
+  }, 0);
+  return numSpecial;
+}
+
+export function getFinalScore(player, opponent) {
+  let score = player.tokens.reduce((a,b) => a+b, 0);
+  let numSpecial = getNumSpecial(player);
+  let numSpecialOpp = getNumSpecial(opponent);
+
+  if (numSpecial > numSpecialOpp) {
+    score += 5;
+  }
+  return score;
+}
+
 export function getScore(player) {
     console.log(player.tokens);
     return player.tokens.reduce((a, b) => a+b, 0);
