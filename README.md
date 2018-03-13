@@ -32,4 +32,4 @@ To start the server
 npm run server
 ```
 
-Now you should see the application running at [localhost:8000](localhost:8000)
+Now you should see the application running at [localhost:8000?player=0&id=1](http://localhost:8000?player=0&id=1)
