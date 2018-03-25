@@ -19,24 +19,18 @@ export class CardDisplay extends React.Component {
 
   render() {
     let cardStyle = {
-      fontWeight: "normal",
       background: this.card.type
     }
-
+    
+    let styleName = "card";
     if (this.props.card.selected === true) {
-      cardStyle.fontWeight = "bold";
-      cardStyle.width = "132px";
-      cardStyle.height = "185px";
-    } else {
-      cardStyle.fontWeight = "normal";
-      cardStyle.width = "120px";
-      cardStyle.height = "168px";
+      styleName = "card-selected";
     }
 
     return (
-      <td className={"card"}
+      <td className={styleName}
            onClick={this.onClick}
-           style={cardStyle}>
+           style={cardStyle} >
       { this.card.type }
       </td>
     );

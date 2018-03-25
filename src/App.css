@@ -49,3 +49,23 @@
     float: left;
 }
 
+@media only screen and (max-width: 800px) {
+    h1 {
+        font-size: 16px;
+    }
+    
+    .tokenDiv {
+        width: 175px;
+        float: left;
+    }
+
+    .scoreDiv{
+        float: left;
+        margin-left: 10px;
+        display: inline-block;
+        height: 140px;
+        vertical-align: middle;
+        font-size:10px;
+        transform: translateY(50%);
+    }
+}

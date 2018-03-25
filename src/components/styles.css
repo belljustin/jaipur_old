@@ -92,6 +92,7 @@
     user-select: none;
     font-family: monospace;
     font-size: 18px;
+    font-weight: normal;
     text-align: center;
     justify-content: center;
     cursor: pointer;
@@ -101,4 +102,92 @@
     height: 168px;
     transition: all 0.1s;
     line-height: 140px;
+}
+
+.card-selected {
+    display: inline-block;
+    user-select: none;
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #cdcdcd;
+    width: 132px;
+    height: 185px;
+    transition: all 0.1s;
+    line-height: 140px;
+}
+@media only screen and (max-width: 800px) {
+    .card {
+        display: inline-block;
+        user-select: none;
+        font-family: monospace;
+        font-size: 10px;
+        text-align: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 6px;
+        border: 1px solid #cdcdcd;
+        width: 50px;
+        height: 74px;
+        transition: all 0.1s;
+        line-height: 70px;
+    }
+
+    .card-selected {
+        display: inline-block;
+        user-select: none;
+        font-family: monospace;
+        font-size: 10px;
+        text-align: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 6px;
+        border: 1px solid #cdcdcd;
+        width: 55px;
+        height: 79px;
+        transition: all 0.1s;
+        line-height: 70px;
+    }
+    
+    .moveButton {
+        display: inline-block;
+        padding: 7px 6px;
+        background-color: #bdbdbdb3;
+        border: 1px #0000004d;
+        border-style: solid;
+        margin-top: 15px;
+        margin-left: 1px;
+        font-size: 10px;
+    }
+
+    .circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 7px;
+        -webkit-border-radius: 7px;
+        -moz-border-radius: 7px;
+        text-align: center;
+        vertical-align: middle;
+        display: inline;
+        line-height: 10px;
+        margin: 1px;
+        padding: 2px;
+        font-weight: bold;
+        font-size:10px;
+    }
+
+    .tokenTitle {
+        width: 40px;
+        text-align: center;
+        display: inline-block;
+        font-weight: bold;
+        font-size:10px;
+        line-height:12px;
+        margin:1px;
+        padding:5px;
+    }
 }
